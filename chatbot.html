@@ -3,65 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anuvaad | Chatbot</title>
-
+    <title>Anuvaad | Auto-Translator (Extended)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #ff85a2;
-            font-family: 'Montserrat', sans-serif;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+        :root {
+            --primary-purple: #8A2BE2;
+            --gradient-purple: linear-gradient(135deg, #8A2BE2 0%, #D100D1 100%);
+            --soft-lavender: #f3ebff;
+            --bg-light: #f8f9fa;
         }
 
-        .back-home-container {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 1001;
+        body { 
+            margin: 0; 
+            /* Switched to Purple Tech Background */
+            background: linear-gradient(135deg, var(--soft-lavender) 0%, #ffffff 100%);
+            font-family: 'Inter', sans-serif; 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
         }
 
-        .btn-back {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 50px;
-            background: rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: 0.3s;
+        .back-home-container { position: absolute; top: 20px; left: 20px; z-index: 1001; }
+        
+        .btn-back { 
+            color: var(--primary-purple); 
+            text-decoration: none; 
+            font-weight: 600; 
+            padding: 10px 20px; 
+            border-radius: 8px; 
+            background: white; 
+            border: 1px solid var(--primary-purple); 
+            transition: 0.3s; 
         }
 
-        .btn-back:hover {
-            background: white;
-            color: #ff85a2;
+        .btn-back:hover { 
+            background: var(--primary-purple); 
+            color: white; 
         }
 
         .chat-rectangle {
-            width: 95%;
-            max-width: 450px; 
-            height: 85vh;
-            background: #ffffff; /* White background for the bot area */
-            border-radius: 30px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-            overflow: hidden;
-            border: 5px solid white;
+            width: 95%; max-width: 480px; height: 85vh;
+            background: #ffffff; border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(138, 43, 226, 0.15);
+            overflow: hidden; 
+            border: 1px solid rgba(138, 43, 226, 0.2); 
             position: relative;
+            display: flex; flex-direction: column;
         }
 
-        /* Crucial: Ensure the container has an explicit height for the inline bot */
-        #chtl-inline-bot {
-            width: 100% !important;
-            height: 100% !important;
-            min-height: 500px;
+        #speech-panel {
+            background: var(--bg-light);
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
         }
+
+        #transcript-display {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            margin-bottom: 12px;
+            font-size: 14px;
+            background: white;
+            min-height: 70px;
+            max-height: 120px;
+            overflow-y: auto;
+            display: block;
+            color: #444;
+            text-align: left;
+            transition: border 0.3s;
+        }
+
+        /* Update Mic Button to Purple */
+        .mic-btn {
+            width: 100%;
+            background: var(--gradient-purple);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .mic-btn.active { 
+            background: #ff0000; 
+            animation: pulse 1s infinite; 
+        }
+
+        #paste-hint {
+            display: none;
+            margin-top: 10px;
+            padding: 8px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,0,0,0.4); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(255,0,0,0); }
+            100% { transform: scale(1); }
+        }
+
+        #chtl-inline-bot { flex-grow: 1; width: 100% !important; height: 100% !important; }
     </style>
 </head>
 <body>
@@ -71,6 +126,12 @@
     </div>
 
     <div class="chat-rectangle">
+        <div id="speech-panel">
+            <div id="transcript-display">Voice transcription will appear here...</div>
+            <button id="mic-control" class="mic-btn">🎤 Start Recording</button>
+            <div id="paste-hint">✨ Copied to clipboard! Now paste in the chat below.</div>
+        </div>
+
         <div id="chtl-inline-bot"></div>
 
         <script> 
@@ -80,8 +141,77 @@
                 containerId: "chtl-inline-bot"
             } 
         </script>
-        
         <script async data-id="9513692492" id="chtl-script" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
+
+        <script>
+            const micBtn = document.getElementById('mic-control');
+            const display = document.getElementById('transcript-display');
+            const hint = document.getElementById('paste-hint');
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+            if (SpeechRecognition) {
+                const recognition = new SpeechRecognition();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US'; 
+
+                let finalTranscript = '';
+                let isRecording = false;
+
+                micBtn.onclick = () => {
+                    if (!isRecording) {
+                        recognition.start();
+                    } else {
+                        recognition.stop();
+                    }
+                };
+
+                recognition.onstart = () => {
+                    isRecording = true;
+                    finalTranscript = '';
+                    micBtn.classList.add('active');
+                    micBtn.innerText = "🛑 Stop & Copy Text";
+                    display.innerText = "Listening...";
+                    hint.style.display = 'none';
+                };
+
+                recognition.onresult = (event) => {
+                    let interimTranscript = '';
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        if (event.results[i].isFinal) {
+                            finalTranscript += event.results[i][0].transcript + ' ';
+                        } else {
+                            interimTranscript += event.results[i][0].transcript;
+                        }
+                    }
+                    display.innerHTML = '<strong>' + finalTranscript + '</strong>' + '<span style="color:#8A2BE2">' + interimTranscript + '</span>';
+                    display.scrollTop = display.scrollHeight;
+                };
+
+                recognition.onend = () => {
+                    isRecording = false;
+                    micBtn.classList.remove('active');
+                    micBtn.innerText = "🎤 Start Recording";
+                    
+                    if (finalTranscript.trim().length > 0) {
+                        navigator.clipboard.writeText(finalTranscript.trim()).then(() => {
+                            hint.style.display = 'block';
+                        });
+                    }
+                };
+
+                recognition.onerror = (event) => {
+                    console.error(event.error);
+                    isRecording = false;
+                    micBtn.classList.remove('active');
+                    micBtn.innerText = "🎤 Start Recording";
+                };
+            } else {
+                display.innerText = "Browser does not support Voice-to-Text.";
+                micBtn.style.display = 'none';
+            }
+        </script>
     </div>
 
 </body>
