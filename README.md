@@ -9,7 +9,7 @@ You can interact with the chatbot here:
 
 ## ✨ Features
 * **Multilingual Support:** Converses in English, Hindi, Bengali, Marathi, Gujarati, and more.
-* **Modern UI:** Built with a clean, "Princess Pink" aesthetic and Montserrat typography.
+* **Modern UI:** Built with a clean, "White" aesthetic .
 * **Responsive Design:** Fully functional on both mobile and desktop screens.
 * **Real-time AI:** Powered by Chatling AI for instant, accurate responses.
 
